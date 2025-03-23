@@ -120,14 +120,16 @@ function drawMap(context, blockSize, mapWidth, mapHeight, startX, startY) {
                     // Draw the visible portion of the image
                     context.drawImage(
                         tile_img,
-                        sourceX, sourceY, sourceWidth, sourceHeight,
-                        drawX, drawY, drawWidth, drawHeight
+                        parseInt(sourceX), parseInt(sourceY),
+                        parseInt(sourceWidth), parseInt(sourceHeight),
+                        parseInt(drawX), parseInt(drawY), parseInt(drawWidth),
+                         parseInt(drawHeight)
                     );
                     //context.fillRect(drawX, drawY, drawWidth, drawHeight);
                     
                     // Draw current room indicator if this is the current room
                     if (x === currentRoomX && y === currentRoomY) {
-                        const rect_x = current_double ? 10 : 0;
+                        const rect_x = current_double ? 5 : 0;
                         // Adjust marker position based on visible portion
                         if (drawX + rect_x >= startX && drawX + rect_x < startX + mapWidth) {
                             context.drawImage(marca_player, drawX + rect_x, drawY);

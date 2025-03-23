@@ -60,7 +60,7 @@ function transition() {
         this.isTransitioning = false;
         this.transitionSpeed = 10;
         this.direction = 'right';
-        this.VIEWPORT_WIDTH = 400;
+        this.VIEWPORT_WIDTH = 533;
         this.VIEWPORT_HEIGHT = 300;
         this.previousRoom;
     }
@@ -76,12 +76,12 @@ function transition() {
         let sourceX = 0 
 
         //rectificación de la x
-        if(this.previousRoom.canvas.width >400 && (this.direction == 'left' || this.direction == 'up2' || this.directiom == 'down2')){
-            sourceX = 400;
+        if(this.previousRoom.canvas.width >533 && (this.direction == 'left' || this.direction == 'up2' || this.directiom == 'down2')){
+            sourceX = 533;
         }
         //cutre pero funciona.
         if ((this.direction =='down2' || this.direction =='up2') && this.previousRoom.canvas.width > level.rooms[room_actual].canvas.width  ){
-            sourceX = 400;
+            sourceX = 533;
         }
         
             
@@ -117,7 +117,7 @@ function transition() {
         
         // Capturar la parte relevante de la nueva habitación
         if (this.direction === 'left') {
-            // Para transiciones hacia la izquierda, tomamos los primeros 400px
+            // Para transiciones hacia la izquierda, tomamos los primeros 533px
             //const sourceX = Math.max(0, currentRoom.canvas.width - this.VIEWPORT_WIDTH);
             ctx.drawImage(
                 currentRoom.canvas,
@@ -131,7 +131,7 @@ function transition() {
                 this.VIEWPORT_HEIGHT
             );
         } else if (this.direction === 'right') {
-            // Para transiciones hacia la derecha, tomamos los últimos 400px
+            // Para transiciones hacia la derecha, tomamos los últimos 533px
             const sourceX = Math.max(0, currentRoom.canvas.width - this.VIEWPORT_WIDTH);
             ctx.drawImage(
                 currentRoom.canvas,
@@ -145,7 +145,7 @@ function transition() {
                 this.VIEWPORT_HEIGHT
             );
         } else if (this.direction === 'up2') {
-            // Para transiciones hacia la derecha, tomamos los últimos 400px
+            // Para transiciones hacia la derecha, tomamos los últimos 533px
             const sourceX = Math.max(0, currentRoom.canvas.width - this.VIEWPORT_WIDTH);
             ctx.drawImage(
                 currentRoom.canvas,
@@ -159,7 +159,7 @@ function transition() {
                 this.VIEWPORT_HEIGHT
             );
         } else if (this.direction === 'down2') {
-            // Para transiciones hacia la derecha, tomamos los últimos 400px
+            // Para transiciones hacia la derecha, tomamos los últimos 533px
             const sourceX = Math.max(0, currentRoom.canvas.width - this.VIEWPORT_WIDTH);
             //alert(sourceX)
             ctx.drawImage(
@@ -240,7 +240,7 @@ function transition() {
                 snapshotY = this.transitionProgress;
                 break;
             case 'down2':
-                //rect_x = 400;
+                //rect_x = 533;
                 snapshotY = this.transitionProgress;
                 break;
             case 'up':
@@ -297,7 +297,7 @@ function transition() {
         let sourceX = 0 
         if(this.previousRoom.canvas.width > this.currentRoomSnapshot.width){
             if (this.direction =='left' || this.direction =='up2' ||this.direction =='down2' ){
-                sourceX = 400;
+                sourceX = 533;
                 //console.error("caso1")
                
             }
@@ -310,7 +310,7 @@ function transition() {
         //cutre pero funciona.
         if ((this.direction =='right' || this.direction =='up2' || this.direction =='down2') && level.rooms[room_actual].double ){
             
-            sourceX = -400
+            sourceX = -533
             //console.error("caso3")
         }
         //console.error(sourceX)

@@ -244,7 +244,7 @@ function change_object_ambientation(map,ambient){
 //objetos propios de la ambientación, buscará en el mapa 1 y lo cambiara
 //por cualquier valor aleatorio que esté en la array
 
-var array_obj = [];
+var array_obj = [8,9,10,17,18,19];
 var statues = [];
 switch (ambient) {
     case 1:

@@ -69,6 +69,15 @@ const esquina7 = new Image();
 esquina7.src = 'img/esquina_ruinas.png';
 /*const puerta_ruinas = new Image();
 puerta_ruinas.src = 'img/puerta_ruinas.png';*/
+//tienda
+const suelo8 = new Image();
+suelo8.src = 'img/suelotienda.png';
+const suelo_var8 = new Image();
+suelo_var8.src = 'img/suelotienda_var.png';
+const pared_unidad8 = new Image();
+pared_unidad8.src = 'img/pared_unidad_tienda.png';
+const esquina8 = new Image();
+esquina8.src = 'img/esquina_tienda.png';
 
 
 
@@ -185,6 +194,14 @@ const menu_tienda = new Image();
 menu_tienda.src = 'img/menu_tienda.png';
 const cursor = new Image();
 cursor.src = 'img/cursor.png';
+const vending = new Image();
+vending.src = 'img/vending.png';
+const alfombra = new Image();
+alfombra.src = 'img/alfombra.png';
+const alfombra_tienda = new Image();
+alfombra_tienda.src = 'img/alfombra_tienda.png';
+const alfombra_tienda2 = new Image();
+alfombra_tienda2.src = 'img/alfombra_tienda2.png';
 
 //objetos
 const jarron = new Image();

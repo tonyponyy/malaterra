@@ -2,6 +2,7 @@ class ObjectRoom{
 
 
     constructor(type,x,y,colision,destructible,hp,size=20,light = false,orientation = false) {
+        console.log(type)
         this.type = type
         this.img = IMAGE_OBJECT[type];
         this.x= x;

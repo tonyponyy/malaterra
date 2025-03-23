@@ -33,7 +33,7 @@ class Room{
         this.double = double;
         // creación canvas
         this.canvas = document.createElement("canvas");
-        this.canvas.width = double ? 800:400; 
+        this.canvas.width = double ? 1066:533; 
         this.canvas.height = 300; 
         this.context = this.canvas.getContext("2d");
         // pools
@@ -44,12 +44,18 @@ class Room{
         this.wall_objects =[];
         //this.open_gates = true;
         //dibujamos el fondo
+        this.change_ambientation();
         paint_room(this.context,this);
         this.poblate_enemys();
         this.poblate_objects();
         this.poblate_wall_objects()
     }
 
+    change_ambientation(){
+      if (this.type ==5){
+        this.ambient = 8;
+      }
+    }
     poblate_objects(){
 
         //tipos de habitación
@@ -201,7 +207,7 @@ class Room{
               
                 let object = new ObjectRoom(
                     tile,
-                    x_init + parseInt(i % width_poblate) * size+400, // Cálculo correcto de x
+                    x_init + parseInt(i % width_poblate) * size+533, // Cálculo correcto de x
                     y_init + parseInt(i / width_poblate) * size, // Cálculo correcto de y
                     null,
                     null,
@@ -233,10 +239,28 @@ class Room{
     poblate_item(){};
 
     poblate_shop(){
-      x=170
-      y=100
+      let x=210+random(20)
+      let y=110+random(20)
       let tienda_room = new ObjectRoom(14,x,y,true,false,10,32)
+      //this.context.drawImage(anuncio,200,5)
+      if (chance(80)){
+        if (chance(50)){
+          this.context.drawImage(alfombra_tienda,x,y)
+        }else{
+          this.context.drawImage(alfombra_tienda2,x,y)
+        }
+        
+      }
+      
+      //print_splat(alfombra,x,y)
       this.objects.push(tienda_room)
+      if (chance(30)){
+         let vending_x_positions = [430,36]
+         let x_v= vending_x_positions[random([vending_x_positions.length-1])];
+         let y_v=64
+         let vending = new ObjectRoom(20,x_v,y_v,true,false,10,32)
+      this.objects.push(vending)
+      }
 
     };
 
@@ -275,8 +299,8 @@ class Room{
      }
      if (!this.door_up2 && this.double && this.type !=3 && (permited_ambients.indexOf(ambient) !=-1|| ambient ==1) && chance(probability)){
       let ventanal = ventanales[parseInt(Math.random()*ventanales.length)]
-      let object = new ObjectRoom(ventanal,188+400,8,false,false,10,10)
-      let object2 = new ObjectRoom(light,188+400,0,false,false,10,10,true)
+      let object = new ObjectRoom(ventanal,188+533,8,false,false,10,10)
+      let object2 = new ObjectRoom(light,188+533,0,false,false,10,10,true)
     this.wall_objects.push(object);
     if (this.type !=5){
       this.wall_objects.push(object2);

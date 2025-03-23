@@ -258,14 +258,14 @@ function this_room_exists(id){
 }
 
 function check_doors(room_test){
-    rect_door = level.rooms[room_actual].double ? 400:0;    
+    rect_door = level.rooms[room_actual].double ? 533:0;    
     const doors = [
-        { x: 377/2, y: 20, width: 50, height: 10, direction: "arriba" },
-        { x: 377/2, y: 270, width: 50, height: 5, direction: "abajo" },
-        { x: (377/2)+400, y: 20, width: 50, height: 10, direction: "arriba2" },
-        { x: (377/2)+400, y: 270, width: 50, height: 5, direction: "abajo2" },
+        { x: 250, y: 20, width: 50, height: 10, direction: "arriba" },
+        { x: 250, y: 270, width: 50, height: 5, direction: "abajo" },
+        { x: (250)+533, y: 20, width: 50, height: 10, direction: "arriba2" },
+        { x: (250)+533, y: 270, width: 50, height: 5, direction: "abajo2" },
         { x: 20, y: 307/2, width: 10, height: 50, direction: "izquierda" },
-        { x: 758/2-7+rect_door, y: 307/2, width: 10, height: 50, direction: "derecha" },
+        { x: 505+rect_door, y: 307/2, width: 10, height: 50, direction: "derecha" },
     ];
     for (const door of doors) {
         if (
@@ -284,13 +284,13 @@ function check_doors(room_test){
                    //down
                     update_current_room(id_to_test)
                     handleDoorEntry('down')
-                    player.x = 200;
+                    player.x = 268;
                     player.y = 235;
                 }else{
                     //down2
                     update_current_room(id_to_test-level.size)
                     handleDoorEntry('down2')
-                    player.x = 600;
+                    player.x = 533+268;
                     player.y = 235;
                 }
 
@@ -304,13 +304,13 @@ function check_doors(room_test){
                    //down
                     update_current_room(id_to_test)
                     handleDoorEntry('down2')
-                    player.x = 200;
+                    player.x = 268;
                     player.y = 235;
                 }else{
                     //down2
                     update_current_room(id_to_test-level.size)
                     handleDoorEntry('down2')
-                    player.x = 600;
+                    player.x = 533+268;
                     player.y = 235;
                 }
 
@@ -324,13 +324,13 @@ function check_doors(room_test){
                    // console.warn("down normall")
                     update_current_room(id_to_test)
                     handleDoorEntry('up')
-                    player.x = 200;
+                    player.x = 268;
                     player.y = 30;
                 }else{
                   //  console.warn("down2 anormal")
                     update_current_room(id_to_test-level.size)
                     handleDoorEntry('up2')
-                    player.x = 600;
+                    player.x = 533+268;
                     player.y = 30;
                 }
                
@@ -345,13 +345,13 @@ function check_doors(room_test){
                    // console.warn("down normall")
                     update_current_room(id_to_test)
                     handleDoorEntry('up2')
-                    player.x = 200;
+                    player.x = 268;
                     player.y = 30;
                 }else{
                   //  console.warn("down2 anormal")
                     update_current_room(id_to_test-level.size)
                     handleDoorEntry('up2')
-                    player.x = 600;
+                    player.x = 533+268;
                     player.y = 30;
                 }
                
@@ -367,9 +367,9 @@ function check_doors(room_test){
                console.warn("vamos a la izquierda")
                let rect=0
                if (level.rooms[room_actual].double){
-                rect = 400;
+                rect = 533;
                }
-                player.x = 337+rect;
+                player.x = 460+rect;
                 player.y = 154;
             }
             if (door.direction == "derecha"  && room_test.door_right && room_test.clear){

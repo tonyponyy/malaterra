@@ -8,7 +8,7 @@ const canvas = document.createElement("canvas");
 const canvas_screen = document.getElementById('canvas');
 canvas_screen.width = 533// real-->553;
 canvas_screen.height = 300;
-canvas.width = 400// real-->553;
+canvas.width = 533// real-->553;
 canvas.height = 300;
 const ctx = canvas.getContext('2d');
 const ctx_screen = canvas_screen.getContext('2d');
@@ -19,7 +19,7 @@ level_actual = 0;
 room_actual = 0;
 previous_room = 0;
 n_tiles = 3
-level = new Level(2,3)
+level = new Level(8,2)
 level.title = "uwu"
 set_events_in_initial(level,[generate_dialog("esto es el principio"),generate_dialog("yeah")]);
 set_events_in_path(level,[generate_dialog("esto es un momento random"),generate_dialog("rakaka")]);
@@ -88,10 +88,13 @@ function animationLoop() {
         draw_gui();
         //camera.x = -player.x
     }
-    ctx_screen.drawImage(panel_iz,400,0)
+    //ctx_screen.drawImage(panel_iz,400,0)
     ctx_screen.drawImage(canvas,0,0)
     //drawMinimap(ctx_screen,50,20)
-    drawMap(ctx_screen, 20,100,100,421,191);
+    if(level.rooms[room_actual].clear){
+        drawMap(ctx_screen, 10,50,50,461,241);
+    }
+    
     
     update_title()
     update_dialog()
@@ -125,7 +128,7 @@ function update_camera() {
     let room_width = room.canvas.width;
     // Centrar la cámara en el jugador
     if (!transition_m.isTransitioning){
-        camera.x = Math.max(0, Math.min(player.x - 400 / 2, room_width - 400));
+        camera.x = Math.max(0, Math.min(player.x - 533 / 2, room_width - 533));
     }else{
         camera.x = 0
     }

@@ -10,16 +10,16 @@
             this.current_room = 0;
             this.ambient = ambient;
             this.intentos = 1;
+            this.add_especial_rooms()
             this.initiate();
             this.title = "";
         }
     
         initiate() {
-            try {
+            //try {
             // const { map, path } = create_map(this.n_tiles); // Obtener mapa y camino
             //this.map = map;
                 const pathSet = new Set(this.path.map(([x, y]) => `${x},${y}`)); // Convertimos path a Set para búsqueda rápida
-        
                 for (let x = 0; x < this.map[0].length; x++) {
                     for (let y = 0; y < this.map[0].length; y++) {
                         const element = this.map[x][y];
@@ -42,7 +42,7 @@
                 this.id = 1;
                 this.correct_rooms();
                 console.warn("conseguido con un total de " + this.intentos + " intentos!");
-            } catch (error) {
+            /*} catch (error) {
                 this.intentos++;
                 console.error("mec error! intento->" + this.intentos, error);
         
@@ -55,7 +55,7 @@
                 } else if (this.intentos > 15) {
                     console.error("ya prou");
                 }
-            }
+            }*/
         }
         
     
@@ -101,6 +101,40 @@
 
 
     }
+
+    add_especial_rooms() {
+        let room_type = 5;
+        let room_number = 13; // Número de habitaciones especiales a agregar
+    
+        let candidates = [];
+        for (let i = 0; i < this.map.length; i++) {
+            for (let e = 0; e < this.map[i].length; e++) {
+                if (this.map[i][e] == 0) {
+                    if (
+                        (i + 1 < this.map.length && this.map[i+1][e] != 0) ||
+                        (i - 1 >= 0 && this.map[i-1][e] != 0) ||
+                        (e + 1 < this.map[i].length && this.map[i][e+1] != 0) ||
+                        (e - 1 >= 0 && this.map[i][e-1] != 0)
+                    ) {
+                        candidates.push({x: i, y: e});
+                    }
+                }
+            }
+        } // <-- Cierra el bucle aquí
+    
+        let candidates_to_push = candidates.slice().sort(() => Math.random() - 0.5);
+    
+        room_number = Math.min(room_number, candidates_to_push.length);
+        console.log("Número de habitaciones especiales a agregar:", room_number);
+    
+        for (let j = 0; j < room_number; j++) {
+            let x = candidates_to_push[j].x;
+            let y = candidates_to_push[j].y;
+            this.map[x][y] = room_type;
+        }
+    }
+    
+    
 
     get_room(id){
         for (let i = 0; i < this.rooms.length+1; i++) {
