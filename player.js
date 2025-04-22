@@ -14,8 +14,9 @@ const player = {
     size_h:10,
     stuck:0,
     //trajes
-    traje:1,
-    casco:1,
+    traje:null,
+    casco:null,
+    weapon:1,
     //proyectiles
     bullet_type:'arrow',
     /* TIPOS DE PROYECTIL
@@ -23,17 +24,42 @@ const player = {
     laser--> bala azul
     fire--> fuego
     */
-
-    triatack:true,
+    
     travesable_bullets: false,
     bullet_speed:5,
-    cadencia:1,
+    cadencia:6,
     rango:150,
     damage_distance:10,
     damage:50,
+    critico:7,
     precision:1,
+    hp_initial:100,
+    hp:80,
     armado:true,
     gore:false,
+    //atributos_base
+    bullet_speed_base:7,
+    cadencia_base:6,
+    rango_base:400,
+    damage_distance_base:5,
+    precision_base:2,
+    critico_base:5,
+    precision_base:5,
+    hp_base:100,
+    aceleration_base:0.5,
+    //spikers
+    spikers:100,
+        numSpikes : 12, // Número de cuchillas
+        radius : 50, // Radio de rotación
+        angleOffset : 0, // Para rotar con el tiempo
+     //special
+    triatack:false,
+    aura:false,
+    critical_explosion:false,
+    // atributos del usuario:
+    can_move:true,
+    money:Infinity,
+    items:[],
     //direcciones
     left:false,
     right:false,
@@ -87,7 +113,7 @@ const player = {
             if (this.armado && player.left && !player.down){
                 sprite_x = player.left || player.right ? 0:32;
                 ctx.drawImage(
-                    rifle_viejo,      // Spritesheet
+                    items[this.weapon].img,      // Spritesheet
                     sprite_x,         // Coordenada X del frame en el spritesheet
                     spriteY,         // Coordenada Y del frame en el spritesheet
                     player.width,    // Ancho del frame
@@ -114,7 +140,7 @@ const player = {
             //dibujamos traje
             if (this.traje){
                 ctx.drawImage(
-                    IMG_TRAJE[this.traje],      // Spritesheet
+                    items[this.traje].img,      // Spritesheet
                     spriteX,         // Coordenada X del frame en el spritesheet
                     spriteY,         // Coordenada Y del frame en el spritesheet
                     player.width,    // Ancho del frame
@@ -128,7 +154,7 @@ const player = {
             //dibujamos casco
             if (this.casco){
                 ctx.drawImage(
-                    IMG_CASCO[this.casco],      // Spritesheet
+                    items[this.casco].img,      // Spritesheet
                     spriteX,         // Coordenada X del frame en el spritesheet
                     spriteY,         // Coordenada Y del frame en el spritesheet
                     player.width,    // Ancho del frame
@@ -143,7 +169,7 @@ const player = {
             if (this.armado && !player.left &&!player.down){
                 sprite_x = player.left || player.right ? 0:32;
                 ctx.drawImage(
-                    rifle_viejo,      // Spritesheet
+                    items[this.weapon].img,      // Spritesheet
                     sprite_x,         // Coordenada X del frame en el spritesheet
                     spriteY,         // Coordenada Y del frame en el spritesheet
                     player.width,    // Ancho del frame
@@ -173,7 +199,7 @@ const player = {
             //dibujamos traje
             if (this.traje){
                 ctx.drawImage(
-                    IMG_TRAJE[this.traje],      // Spritesheet
+                    items[this.traje].img,      // Spritesheet
                     3 * player.width,         // Coordenada X del frame en el spritesheet
                     0,         // Coordenada Y del frame en el spritesheet
                     player.width,    // Ancho del frame
@@ -187,7 +213,7 @@ const player = {
             //dibujamos casco
             if (this.casco){
                 ctx.drawImage(
-                    IMG_CASCO[this.casco],      // Spritesheet
+                    items[this.casco].img,      // Spritesheet
                     3 * player.width,         // Coordenada X del frame en el spritesheet
                     0,         // Coordenada Y del frame en el spritesheet
                     player.width,    // Ancho del frame
@@ -202,7 +228,7 @@ const player = {
             if (this.armado){
                 //sprite_x = player.left || player.right ? 0:32;
                 ctx.drawImage(
-                    rifle_viejo,      // Spritesheet
+                    items[this.weapon].img,      // Spritesheet
                     32,         // Coordenada X del frame en el spritesheet
                     0,         // Coordenada Y del frame en el spritesheet
                     player.width,    // Ancho del frame
@@ -219,12 +245,57 @@ const player = {
     },
 
 };
+//set_equipo();
 
+function drawSpikes() {
+    const numSpikes = player.numSpikes;
+    const radius = player.radius;
+    const n_tiles = 4;
+    const speed_animation = 6;
+    const tile = Math.floor((frame_counter / speed_animation) % n_tiles);
+    const tileWidth = spikeImg.width / n_tiles;
 
+    ctx.fillStyle = SOMBRA; // sombra para todos
 
+    for (let i = 0; i < numSpikes; i++) {
+        const angle = player.angleOffset + (i * (2 * Math.PI / numSpikes));
+        const spikeX = player.x + Math.cos(angle) * radius - camera.x;
+        const spikeY = player.y + Math.sin(angle) * radius;
+
+        // --- Sombra ---
+        ctx.beginPath();
+        ctx.ellipse(
+            spikeX,
+            spikeY + spikeImg.height / 2 + 2,   // justo debajo del spike
+            tileWidth * 0.3,
+            spikeImg.height * 0.15,
+            0,
+            0,
+            Math.PI * 2
+        );
+        ctx.fill();
+
+        // --- Spike ---
+        ctx.save();
+        ctx.translate(spikeX, spikeY);
+        //ctx.rotate(angle + Math.PI / 2); // opcional: si quieres rotarlos
+        ctx.drawImage(
+            spikeImg,
+            tile * tileWidth, 0, tileWidth, spikeImg.height,
+            -tileWidth / 2, -spikeImg.height / 2,
+            tileWidth, spikeImg.height
+        );
+        ctx.restore();
+    }
+
+    player.radius = 55 + Math.sin(frame_counter * 0.1) * 5;
+    player.angleOffset += 0.05;
+}
+
+  
 
 function paint_auras(){
-    if (player.triatack) {
+    if (player.aura) {
         ctx.save(); // Guardar el estado actual del contexto
         
        ctx.globalCompositeOperation = "color-dodge";
@@ -258,6 +329,9 @@ function this_room_exists(id){
 }
 
 function check_doors(room_test){
+    if (dialog_active){
+        return;
+    }
     rect_door = level.rooms[room_actual].double ? 533:0;    
     const doors = [
         { x: 250, y: 20, width: 50, height: 10, direction: "arriba" },
@@ -408,8 +482,8 @@ function print_splat(image,x,y){
         context_room =room.context;
         let scaleX = Math.random() > 0.5 ? -1:1;
         let scaleY = Math.random() > 0.5 ? -1:1;
-        let rect_x = scaleX == -1 ? -32:0;
-        let rect_y = scaleY == -1 ? -32:0;
+        let rect_x = scaleX == -1 ? -image.width:0;
+        let rect_y = scaleY == -1 ? -image.height:0;
         context_room.save();  // Guardamos el contexto actual
         context_room.scale(scaleX, scaleY); // Aplicamos el volteo horizontal si es necesari
         context_room.drawImage(image,parseInt(x*scaleX +rect_x),parseInt(y*scaleY+rect_y))
@@ -418,6 +492,12 @@ function print_splat(image,x,y){
 }
 const keys = {}; // Objeto para rastrear teclas activas
 function updatePlayerPosition() {
+    //poner pausa a player
+    if (keys[" "]){
+        set_pause();
+    }
+
+
     player.left = false;
     player.right = false;
     player.up = false;
@@ -445,49 +525,52 @@ function updatePlayerPosition() {
             }
         }
     }
+    //si hay dialogo activo no se puede mover ni disparar
+    
+    if (player.can_move){
+        if (keys["ArrowUp"]) prov_vy -= player.acceleration;
+        if (keys["ArrowDown"]) prov_vy += player.acceleration;
+        if (keys["ArrowLeft"]) prov_vx -= player.acceleration;
+        if (keys["ArrowRight"]) prov_vx += player.acceleration;
 
-    if (keys["ArrowUp"]) prov_vy -= player.acceleration;
-    if (keys["ArrowDown"]) prov_vy += player.acceleration;
-    if (keys["ArrowLeft"]) prov_vx -= player.acceleration;
-    if (keys["ArrowRight"]) prov_vx += player.acceleration;
 
-
-    if (keys["d"]){
-       
-        player.left = false;
-        player.up = false;
-        player.down = false;
-        player.right = true
-        shoot_disparo(0);
-    }   
-    if (keys["w"]){
-        player.left = false;
-        player.right = false;
-        player.up = false;
-        player.down = false;
-        player.down = true;
-        shoot_disparo(270); 
-    } 
-    if (keys["a"]){
-        player.left = false;
-        player.right = false;
-        player.up = false;
-        player.down = false;
-        player.left = true;
-        shoot_disparo(180);
-    } 
-    if (keys["s"]){
-        player.left = false;
-        player.right = false;
-        player.up = false;
-        player.down = false;
-        player.up = true;
-        shoot_disparo(90); 
-    } 
-    if (keys["f"]){
-        if (canvas_screen.requestFullscreen) {
-            canvas_screen.requestFullscreen();
-          }
+        if (keys["d"]){
+        
+            player.left = false;
+            player.up = false;
+            player.down = false;
+            player.right = true
+            shoot_disparo(0);
+        }   
+        if (keys["w"]){
+            player.left = false;
+            player.right = false;
+            player.up = false;
+            player.down = false;
+            player.down = true;
+            shoot_disparo(270); 
+        } 
+        if (keys["a"]){
+            player.left = false;
+            player.right = false;
+            player.up = false;
+            player.down = false;
+            player.left = true;
+            shoot_disparo(180);
+        } 
+        if (keys["s"]){
+            player.left = false;
+            player.right = false;
+            player.up = false;
+            player.down = false;
+            player.up = true;
+            shoot_disparo(90); 
+        } 
+        if (keys["f"]){
+            if (canvas_screen.requestFullscreen) {
+                canvas_screen.requestFullscreen();
+            }
+        }
     }
    
     //object_to_check = {x: player.x+prov_vx,y:player.y+prov_vy,size_h:player.size_h,size_w:player.size_w}

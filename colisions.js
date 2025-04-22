@@ -37,29 +37,30 @@ function colision_detect(element1, element2) {
 }
 
 function colision_wall(obj) {
-    room = level.rooms[room_actual]    
-    const up = { y: 25 };
-    const down = { y: room.canvas.height - 60 };
-    const left = { x: 30 };
-    const right = { x: room.canvas.width - 60 };
+    const room = level.rooms[room_actual];
+    
+    const up = { y: 20 };
+    const down = { y: room.canvas.height - 30 - obj.size_h };
+    const left = { x: 0 };
+    const right = { x: room.canvas.width - 30 - obj.size_w };
 
-    if (obj.y < up.y) {
-        obj.y = up.y; 
-    } else if (obj.y > down.y) {
-        obj.y = down.y; 
+    if (obj.y < up.y){
+        return true
+    }
+    if (obj.y > down.y){
+        return true
+    }
+    if (obj.x < left.x){
+        return true
+    }
+    if (obj.x > right.x){
+        return true
     }
 
-    if (obj.x < left.x) {
-        obj.x = left.x; 
-    } else if (obj.x > right.x) {
-        obj.x = right.x; 
-    }
-
-    // Retorna true si se detectó alguna colisión
-    return obj.y === up.y || obj.y === down.y || obj.x === left.x || obj.x === right.x;
+    return false;
 }
 
-function check_all_colisions(obj, vx = 0, vy = 0) {
+function check_all_colisions(obj, vx = 0, vy = 0,enemy = true) {
     // Prevent direct mutation of original object
     const testObj = { ...obj };
 
@@ -71,7 +72,8 @@ function check_all_colisions(obj, vx = 0, vy = 0) {
     // Perform collision checks
     const wallCollision = colision_wall(testObj);
     const objectCollision = colision_with_array(testObj, level.rooms[room_actual].objects.filter(obj => obj.colision));
-    const enemysCollision = colision_with_array(testObj, level.rooms[room_actual].enemys);
+   
+    //const enemysCollision = colision_with_array(testObj, level.rooms[room_actual].enemys);
     
     return wallCollision || objectCollision //|| enemysCollision
 }
@@ -82,15 +84,25 @@ function check_all_colisions(obj, vx = 0, vy = 0) {
 function anti_stuck(obj) {
     // Primera fase - búsqueda direccional
     const directions = [
+        { dx: -1, dy: -1 },  // Diagonal arriba-izquierda
+        { dx: 1, dy: -1 },   // Diagonal arriba-derecha
+        { dx: -1, dy: 0 },  // Izquierda
+        { dx: 0, dy: -1 },  // Arriba
+
+        { dx: 1, dy: 0 },   // Derecha
+        { dx: 0, dy: 1 },   // Abajo
         { dx: 1, dy: 1 },   // Diagonal abajo-derecha
         { dx: -1, dy: 1 },  // Diagonal abajo-izquierda
-        { dx: 0, dy: -1 },  // Arriba
-        { dx: 1, dy: 0 },   // Derecha
-        { dx: -1, dy: 0 },  // Izquierda
         { dx: 0, dy: 1 },   // Abajo
+
+
+        
+       
+        
+       
     ];
     
-    const STEP_SIZE = 20;        
+    const STEP_SIZE = 1;        
     const MAX_DISTANCE = 300;    
     let iterations = 0;          
     

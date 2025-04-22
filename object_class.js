@@ -44,6 +44,14 @@ class ObjectRoom{
                     image = jarron_parts[img_pos]
                     splat_img= jarron_splats[img_pos];
                 }
+                if (this.type ==21){
+                    let  img_pos = parseInt(Math.random()*bidon_parts.length)
+                    image = bidon_parts[img_pos]
+                    splat_img= bidon_splats[img_pos];
+                    do_explosion(this.x-this.size_w,this.y-this.size_h)
+                    vx = Math.random()*(1)+0.5;
+                    vy = Math.random()*(1)+0.5;
+                }
                 let particle = new Particle(image,splat_img,this.x+this.size_h/2,this.y+this.size_h/2,vx*3,vy*3)
                 level.rooms[room_actual].particles.push(particle)
                 

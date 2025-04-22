@@ -87,7 +87,7 @@ class Particle{
             
             // Configuramos la sombra (más pequeña cuanto más elevado esté)
             const shadowScale = 1 - (elevation / (maxElevation * 2));
-            ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+            ctx.fillStyle = SOMBRA;
             ctx.beginPath();
             ctx.ellipse(0, 0, this.img.width/2 * shadowScale, this.img.height/4 * shadowScale, 0, 0, Math.PI * 2);
             ctx.fill();

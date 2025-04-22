@@ -75,3 +75,11 @@ function load_enemy(){
     level.rooms[room_actual].enemys[0] =saved_enemy;
 
 }
+
+function do_explosion(x,y){
+    let explosion_animation = new AnimationScene(explosion,x,y,96,96,6)
+    let explosion_hitbox = new Hitbox(x-(96/2),y-(96/2),192,192,30)
+    level.rooms[room_actual].animations.push(explosion_animation)
+    level.rooms[room_actual].hitboxes.push(explosion_hitbox)
+    print_splat(splat_explosion,x,y)
+}

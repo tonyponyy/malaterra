@@ -13,12 +13,16 @@ class Event{
 
     update(){
         if (!this.done){
+          //colision_detect(this,player)
             // si onpress está puesto a true, significa que se ejecutará 
             // cuando se pulse una tecla, de otra manera, se ejecutara al iniciar
-            if(!dialog_active && (!this.onpress || (isPushingKeys() && colision_detect(this,player)))){
+            if(!dialog_active && !shop_active && (!this.onpress || (is_fucking_key_pressed() && colision_detect(this,player)))){
               if (this.type.type == "dialog"){
                 dialog(this.type.text)
                 this.done = true;
+              }
+              if (this.type.type == "shop"){
+                open_shop(this.type.items)
               }
             }
 

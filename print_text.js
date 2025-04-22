@@ -56,7 +56,8 @@ font_map = [
   "?",
   ",",
   "Ñ",
-  "¿"
+  "¿",
+  "/"
 ];
 
 function print_text(string_text, x, y,context = ctx) {

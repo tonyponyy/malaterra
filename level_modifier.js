@@ -58,3 +58,9 @@ function set_events_in_path(level_selected, events) {
   function ensureArray(value) {
     return Array.isArray(value) ? value : [value];
   }
+
+  function loop(n,fx){
+    for (let i = 0; i < n; i++) {
+      fx();
+    }
+  }

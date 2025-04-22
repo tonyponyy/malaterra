@@ -9,3 +9,10 @@ function isPushingKeys(){
     }
     return false; 
 }
+
+function is_fucking_key_pressed(){
+    if (keys["d"] || keys["w"]|| keys["a"] || keys["s"]){
+        return true;
+    }
+    return false; 
+}

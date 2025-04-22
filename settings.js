@@ -6,20 +6,20 @@ title_initiate = true;
 finish_title = Infinity;
 
 //trajes y cascos
-IMG_TRAJE =[false,traje1]
+IMG_TRAJE =[false,armadura]
 IMG_CASCO =[false,casco1]
 
 
 //enemigos
-HP_ENEMY =[50,100]
-IMAGE_ENEMY =[slime_img,sapo64_img]
-SPLAT_IMAGE_ENEMY =[splat_slime,splat_sangre]
-PART_IMG =[slime_part,octo_part]
-SPEED_ENEMY =[2,1]
+HP_ENEMY =[50,100,30,10]
+IMAGE_ENEMY =[slime_img,sapo64_img,esqueleto_img,goliat_img]
+SPLAT_IMAGE_ENEMY =[splat_slime,splat_sangre,splat_esqueleto,splat_sangre]
+PART_IMG =[slime_part,octo_part,esqueleto_part,octo_part]
+SPEED_ENEMY =[2,1,2,1]
 
 //objetos
-IMAGE_OBJECT = [null,jarron,ventanal1,ventanal_luz,ventanal2,ventana_mazmorra,luz_mazmorra_img,pinchos,piedra,piedra2,piedra3,palmera1,palmera2,palmera3,tienda,palmerita,tocon,piedra4,piedra5,piedra6,vending]
-DESTRUCTIBLE_OBJECT =[1]
+IMAGE_OBJECT = [null,jarron,ventanal1,ventanal_luz,ventanal2,ventana_mazmorra,luz_mazmorra_img,pinchos,piedra,piedra2,piedra3,palmera1,palmera2,palmera3,tienda,palmerita,tocon,piedra4,piedra5,piedra6,vending,bidon]
+DESTRUCTIBLE_OBJECT =[1,21]
 TRABESABLE_OBJECT =[]
 //imagenes de sala
 

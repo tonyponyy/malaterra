@@ -9,7 +9,6 @@ class Enemy{
         this.y = y;
         this.hp = HP_ENEMY[type_enemy];
         this.hp_initial =HP_ENEMY[type_enemy];
-        this.show_hp = false;
         this.tile = 0;
         this.speed = SPEED_ENEMY[type_enemy]
         this.vx = 0;
@@ -21,6 +20,7 @@ class Enemy{
         this.size = IMAGE_ENEMY[type_enemy].width/9;
         this.size_w = IMAGE_ENEMY[type_enemy].width/9;
         this.size_h = this.size_w
+        this.show_hp = this.size_w >=192 ? true:false;
         this.damaged = 0;
         //nos devuelve un numero aleatorio para que se anime en un momento
         //diferente que otro enemigo.
@@ -30,6 +30,7 @@ class Enemy{
         this.frame_stuck = 0;
         this.colision_with_wall = false;
         this.colision_with_object = false;
+        this.velocity_animation = random(12,8)
     }
 
     draw() {
@@ -39,7 +40,7 @@ class Enemy{
     
         if (Math.abs(this.vx) > velocidad_minima || Math.abs(this.vy) > velocidad_minima) {
             // Movimiento
-            let velocity_frame = parseInt(frame_counter / 10);
+            let velocity_frame = parseInt(frame_counter / this.velocity_animation);
     
             // Determina el frame según la dirección del movimiento
             if (Math.abs(this.vx) > Math.abs(this.vy)) {
@@ -60,8 +61,9 @@ class Enemy{
     
             ctx.save();
             
-            if (this.damaged > 0) {
-                //ctx.globalCompositeOperation = "destination-out";
+            if (this.damaged > 0 && this.size_h< 192) {
+                //ponemos lo de que no se ponga en blanco si es 192 o mas grande porque el sprite es
+                //muy grande y podemos morir de epilepsia
                  ctx.filter= "brightness(100)"
             }
     
@@ -162,7 +164,7 @@ class Enemy{
         // Verificar colisiones
         let collision = false;
         
-        if (colision_wall(this)) {
+        if (colision_wall({x:this.x,y:this.y,size_h:this.size_h+this.size_h/2,size_w:this.size_w+this.size_w/2})) {
             this.colision_with_wall = true;
             collision = true;
         } else {
@@ -240,10 +242,10 @@ class Enemy{
 
     colision_do(){
         this.frame_stuck++
-        if (this.frame_stuck >20){
+        if (this.frame_stuck >5){
             anti_stuck(this)
             if(this.frame_stuck > 200){
-                alert("mondongo")
+                //alert("mondongo")
                 this.hp = -1;
             }
         }
@@ -253,16 +255,45 @@ class Enemy{
     }
 
     damage_distance(disparo){
-        if (player.gore){
+        let critical = chance(player.critico)
+        
+        if (player.gore || critical){
             print_splat(this.splat_img,this.x+this.size_h/2,this.y+this.size_w/2)
         }
-        this.hp -= player.damage_distance;
+        if (!critical){
+            this.hp -= player.damage_distance;
+        }else{
+            let billboard_scene = new Billboard(critical_img,this.x,this.y,60)
+            if (player.critical_explosion){
+                do_explosion(this.x-this.size_w/2,this.y-this.size_h/2)
+            }
+            level.rooms[room_actual].billboards.push(billboard_scene)
+            this.hp -= player.damage_distance*3;
+        }
+        
         this.vx += disparo.vx/ this.peso
         this.vx += disparo.vx/ this.peso
 
     }
     damage(){
         this.hp -= player.damage;
+    }
+    other_damage(n){
+        let critical = chance(player.critico)
+        if (player.gore || critical){
+            print_splat(this.splat_img,this.x+this.size_h/2,this.y+this.size_w/2)
+        }
+        if (!critical){
+            this.hp -= n;
+        }else{
+            let billboard_scene = new Billboard(critical_img,this.x,this.y,60)
+            if (player.critical_explosion){
+                do_explosion(this.x-this.size_w/2,this.y-this.size_h/2)
+            }
+            level.rooms[room_actual].billboards.push(billboard_scene)
+            this.hp -= n*3;
+        }
+
     }
 
     death(){

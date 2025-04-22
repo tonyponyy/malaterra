@@ -105,7 +105,7 @@ function paint_room(current_context,room) {
     }
     }
     if (room.door_up2) {
-        x = 855;
+        x = (250)+533;
         y = -7;
         drawDoor(puerta_img, x, y, 0,current_context); // No rotamos para la puerta hacia arriba
         if (room.door_up.type == 3) {
@@ -115,7 +115,7 @@ function paint_room(current_context,room) {
         }
     }
     if (room.door_down2) {
-        x = 855;
+        x = (250)+533;
         y = 262;
         drawDoor(puerta_img, x, y, Math.PI,current_context); // Rotamos 180 grados para la puerta hacia abajo
         if (room.door_down.type == 3) {
@@ -211,7 +211,7 @@ function draw_gates(room){
         drawGate(puerta_pinchos, x-camera.x, y, 0,ctx,frame); // No rotamos para la puerta_pinchos hacia arriba
     }
     if (room.door_up2) {
-        x = 855;
+        x = (250)+533;
         y = -7;
         drawGate(puerta_pinchos, x-camera.x, y, 0,ctx,frame); // No rotamos para la puerta_pinchos hacia arriba
     }
@@ -221,7 +221,7 @@ function draw_gates(room){
         drawGate(puerta_pinchos, x-camera.x, y, Math.PI,ctx,frame); // Rotamos 180 grados para la puerta_pinchos hacia abajo
     }
     if (room.door_down2) {
-        x = 855;
+        x = (250)+533;
         y = 262;
         drawGate(puerta_pinchos, x-camera.x, y, Math.PI,ctx,frame); // Rotamos 180 grados para la puerta_pinchos hacia abajo
     }
