@@ -8,8 +8,8 @@ function set_events_in_path(level_selected, events) {
     events = ensureArray(events)
 
     //room de preboss ( para eviarla)
-    var room_preboss =level_selected.rooms.find((element) => element.path == true && (element.door_down.type ==3 || element.door_down2.type ==3 || element.door_up.type ==3 || element.door_left.type==3 || element.door_right.type == 3))
-    var id_preboss = room_preboss.id
+    var room_preboss =level_selected.rooms.find((element) => element.path == true && (element.door_down.type ==3 || element.door_down2.type ==3 || element.door_up.type ==3 || element.door_up2.type ==3 || element.door_left.type==3 || element.door_right.type == 3))
+    var id_preboss = room_preboss ? room_preboss.id : -1
 
     // Seleccionamos las rooms que no sean de boss ni inicial para no interferir con el path ni con el room de preboss
     try{
@@ -48,7 +48,11 @@ function set_events_in_path(level_selected, events) {
 
   function set_events_in_pre_boss(level_selected, events) {
     events = ensureArray(events)
-    const room_to_be_pushed =level_selected.rooms.find((element) => element.path == true && (element.door_down.type ==3 || element.door_down2.type ==3 || element.door_up.type ==3 || element.door_left.type==3 || element.door_right.type == 3))
+    const room_to_be_pushed =level_selected.rooms.find((element) => element.path == true && (element.door_down.type ==3 || element.door_down2.type ==3 || element.door_up.type ==3 || element.door_up2.type ==3 || element.door_left.type==3 || element.door_right.type == 3))
+    if (!room_to_be_pushed) {
+      set_events_in_initial(level_selected, events)
+      return
+    }
     // Añadimos cada evento al room
     for (let i = 0; i < events.length; i++) {
       room_to_be_pushed.events.push(events[i]);
