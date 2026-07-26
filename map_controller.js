@@ -1,60 +1,176 @@
 function create_map(rooms_init) {
-    // Crear un array bidimensional más grande
-    const array = createArray2D(rooms_init * 2, rooms_init * 2);
+    const gridSize = rooms_init * 2;
 
     // Comenzamos en el centro
-    let cursor_x = Math.floor(rooms_init);
-    let cursor_y = Math.floor(rooms_init);
-    array[cursor_x][cursor_y] = 2;
+    const startX = Math.floor(rooms_init);
+    const startY = Math.floor(rooms_init);
 
-    // Generar el mapa
-    let last_direction = -1;
-    let direction_repeats = 0;
+    // offsets ortogonales: eje x = arriba/abajo, eje y = izquierda/derecha
+    // (misma convención que generate_room.js: door_up = map[x-1][y], door_right = map[x][y+1])
+    const directions = [
+        { dx: -1, dy: 0 },
+        { dx: 1, dy: 0 },
+        { dx: 0, dy: -1 },
+        { dx: 0, dy: 1 },
+    ];
 
-    for (let i = 0; i < array.length; i++) {
-        let direction;
+    const targetRooms = Math.max(6, rooms_init * 2);
+    const minAcceptableRooms = Math.ceil(targetRooms * 0.7);
+    const minBossDistance = Math.max(3, Math.floor(targetRooms / 3));
+    const maxGrowthAttempts = targetRooms * 40;
+    const maxFullRetries = 30;
+    const desiredShops = Math.max(1, Math.round(targetRooms / 5));
 
-        if (direction_repeats < 5 && last_direction !== -1) {
-            direction = last_direction;
-            direction_repeats++;
-        } else {
-            direction = random(4);
-            direction_repeats = 1;
-            last_direction = direction;
+    function inBounds(x, y) {
+        return x >= 0 && x < gridSize && y >= 0 && y < gridSize;
+    }
+
+    // random(n) de random_functions.js está 1-indexado (rango [1,n]) para
+    // n>1, pero tiene un caso especial para n==1 que devuelve [0,1]. Este
+    // helper evita ese caso especial para elegir índices de array de forma
+    // segura sea cual sea el tamaño de la lista.
+    function pickIndex(length) {
+        if (length <= 1) return 0;
+        return random(length) - 1;
+    }
+
+    function occupiedNeighbors(grid, x, y) {
+        let count = 0;
+        for (const { dx, dy } of directions) {
+            if (inBounds(x + dx, y + dy) && grid[x + dx][y + dy] !== 0) count++;
         }
+        return count;
+    }
 
-        switch (direction) {
-            case 0: if (cursor_y - 1 >= 0) cursor_y--; break; // Arriba
-            case 1: if (cursor_x + 1 < rooms_init * 2) cursor_x++; break; // Derecha
-            case 2: if (cursor_y + 1 < rooms_init * 2) cursor_y++; break; // Abajo
-            case 3: if (cursor_x - 1 >= 0) cursor_x--; break; // Izquierda
-        }
-
-        if (i === array.length - 1) {
-            if (array[cursor_x][cursor_y] != 2){
-                array[cursor_x][cursor_y] = 3;
-            }else{
-                let acomplished = false;
-                for (let i = 0; i < array.length; i++) {
-                    for (let e = 0; e < array[i].length; e++) {
-                        if (!acomplished){
-                            const element = array[e][i];
-                            if (element == 1){
-                                array[e][i] = 3
-                                acomplished = true;
-                            }
-
-                        }
-                    }
+    function bfsDistances(grid, fromX, fromY) {
+        const dist = new Map();
+        dist.set(`${fromX},${fromY}`, 0);
+        const queue = [[fromX, fromY]];
+        while (queue.length > 0) {
+            const [x, y] = queue.shift();
+            const d = dist.get(`${x},${y}`);
+            for (const { dx, dy } of directions) {
+                const nx = x + dx;
+                const ny = y + dy;
+                const key = `${nx},${ny}`;
+                if (inBounds(nx, ny) && grid[nx][ny] !== 0 && !dist.has(key)) {
+                    dist.set(key, d + 1);
+                    queue.push([nx, ny]);
                 }
             }
-             
-        } else {
-            if (array[cursor_x][cursor_y] !=2){
-                array[cursor_x][cursor_y] = 1; // Habitación normal
-            }
-            
         }
+        return dist;
+    }
+
+    // Crece un "esqueleto" de rooms desde el inicio: en cada paso se elige una
+    // room YA colocada al azar (no solo la última), así el árbol se ramifica en
+    // vez de ser un único pasillo. Se limita a 1 vecino ocupado por celda nueva
+    // para que quede un árbol sin bucles ni bloques 2x2.
+    function growSkeleton() {
+        const grid = createArray2D(gridSize, gridSize);
+        grid[startX][startY] = 2;
+        const roomList = [{ x: startX, y: startY }];
+
+        let attempts = 0;
+        while (roomList.length < targetRooms && attempts < maxGrowthAttempts) {
+            attempts++;
+            const base = roomList[pickIndex(roomList.length)];
+            const dir = directions[random(4) - 1];
+            const nx = base.x + dir.dx;
+            const ny = base.y + dir.dy;
+
+            if (!inBounds(nx, ny) || grid[nx][ny] !== 0) continue;
+            if (occupiedNeighbors(grid, nx, ny) > 1) continue;
+
+            // cuanto más lejos del centro, menos probable seguir creciendo ahí
+            // (evita que el dungeon se estire en línea recta hasta el borde)
+            const distFromCenter = Math.abs(nx - startX) + Math.abs(ny - startY);
+            const acceptChance = Math.max(15, 100 - Math.floor((distFromCenter / gridSize) * 100));
+            if (!chance(acceptChance)) continue;
+
+            grid[nx][ny] = 1;
+            roomList.push({ x: nx, y: ny });
+        }
+
+        return { grid, roomList };
+    }
+
+    // El boss va en la room alcanzable más lejana por BFS real (en vez del
+    // fallback anterior, que cogía la primera room en orden de lectura).
+    function pickBossRoom(grid, roomList) {
+        const dist = bfsDistances(grid, startX, startY);
+        let maxDist = -1;
+        for (const room of roomList) {
+            if (room.x === startX && room.y === startY) continue;
+            const d = dist.get(`${room.x},${room.y}`);
+            if (d > maxDist) maxDist = d;
+        }
+        if (maxDist < 0) return null;
+        const candidates = roomList.filter(
+            (room) => !(room.x === startX && room.y === startY) && dist.get(`${room.x},${room.y}`) === maxDist
+        );
+        return { room: candidates[pickIndex(candidates.length)], distance: maxDist };
+    }
+
+    let grid, roomList, bossPick;
+    let fullRetries = 0;
+    do {
+        ({ grid, roomList } = growSkeleton());
+        bossPick = pickBossRoom(grid, roomList);
+        fullRetries++;
+    } while (
+        fullRetries < maxFullRetries &&
+        (roomList.length < minAcceptableRooms || !bossPick || bossPick.distance < minBossDistance)
+    );
+
+    let array = grid;
+
+    // válvula de seguridad: en el caso degenerado de que ni una sola room haya
+    // podido crecer (grid demasiado pequeña / muy mala suerte), forzamos una
+    // vecina del inicio para garantizar que exista boss.
+    if (!bossPick) {
+        for (const dir of directions) {
+            const nx = startX + dir.dx;
+            const ny = startY + dir.dy;
+            if (inBounds(nx, ny)) {
+                array[nx][ny] = 1;
+                roomList.push({ x: nx, y: ny });
+                bossPick = { room: { x: nx, y: ny }, distance: 1 };
+                break;
+            }
+        }
+    }
+
+    if (bossPick) {
+        array[bossPick.room.x][bossPick.room.y] = 3;
+    }
+
+    // Rooms shop/especiales como callejones sin salida reales: se añade una
+    // room NUEVA colgando de una hoja (grado 1), en vez de convertir una celda
+    // ya conectada al camino (que podría acabar con 2-3 puertas y ser un cruce
+    // más en vez de una sala secundaria aislada).
+    const leaves = roomList.filter((room) => {
+        if (room.x === startX && room.y === startY) return false;
+        if (bossPick && room.x === bossPick.room.x && room.y === bossPick.room.y) return false;
+        return occupiedNeighbors(array, room.x, room.y) === 1;
+    });
+    const shuffledLeaves = leaves.slice().sort(() => Math.random() - 0.5);
+
+    let shopsPlaced = 0;
+    for (const leaf of shuffledLeaves) {
+        if (shopsPlaced >= desiredShops) break;
+        const freeCells = directions
+            .map((dir) => ({ x: leaf.x + dir.dx, y: leaf.y + dir.dy }))
+            .filter(
+                (cell) =>
+                    inBounds(cell.x, cell.y) &&
+                    array[cell.x][cell.y] === 0 &&
+                    occupiedNeighbors(array, cell.x, cell.y) === 1
+            );
+        if (freeCells.length === 0) continue;
+        const chosen = freeCells[pickIndex(freeCells.length)];
+        array[chosen.x][chosen.y] = 5;
+        shopsPlaced++;
     }
 
     function findPath(startX, startY, bossX, bossY) {
@@ -279,6 +395,11 @@ switch (ambient) {
         break;
     case 7:
         //7 ruinas
+        array_obj = [8,9,10,17,18,19];
+        statues = []
+        break;
+    case 9:
+        //9 mas_del_angel
         array_obj = [8,9,10,17,18,19];
         statues = []
 }

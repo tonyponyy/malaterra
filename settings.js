@@ -30,13 +30,14 @@ TRABESABLE_OBJECT =[]
 //5 desierto
 //6 hielo
 //7 ruinas
+//8 tienda (reservado, se asigna solo a salas tipo shop)
+//9 mas_del_angel
 
-
-suelo_images =[null,suelo,suelo2,suelo3,suelo4,suelo5,suelo6,suelo7,suelo8]
-suelo_images_var =[null,suelo_var,suelo_var2,suelo_var3,suelo_var4,suelo_var5,suelo_var6,suelo_var7,suelo_var8]
-pared_unidad_img =[null,pared_unidad,pared_unidad2,pared_unidad3,pared_unidad4,pared_unidad5,pared_unidad6,pared_unidad7,pared_unidad8]
-esquina_img =[null,esquina,esquina2,esquina3,esquina4,esquina5,esquina6,esquina7,esquina8]
-puerta_images=[null,puerta,puerta,puerta_castillo,puerta_alien,puerta,puerta_hielo,puerta,puerta]
+suelo_images =[null,suelo,suelo2,suelo3,suelo4,suelo5,suelo6,suelo7,suelo8,suelo9]
+suelo_images_var =[null,suelo_var,suelo_var2,suelo_var3,suelo_var4,suelo_var5,suelo_var6,suelo_var7,suelo_var8,suelo_var9]
+pared_unidad_img =[null,pared_unidad,pared_unidad2,pared_unidad3,pared_unidad4,pared_unidad5,pared_unidad6,pared_unidad7,pared_unidad8,pared_unidad9]
+esquina_img =[null,esquina,esquina2,esquina3,esquina4,esquina5,esquina6,esquina7,esquina8,esquina9]
+puerta_images=[null,puerta,puerta,puerta_castillo,puerta_alien,puerta,puerta_hielo,puerta,puerta,puerta_angel]
 
 //DECORACIONES DE LA PARED
 permited_ambients = [3]

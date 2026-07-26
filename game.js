@@ -19,7 +19,7 @@ const context = canvas_test.getContext('2d');
 
 function load_first(){
     //refactorizar a saco
-    level = new Level(8,1)
+    level = new Level(2,9)
     level.title = "uwu"
     set_events_in_initial(level,[generate_dialog("esto es el principio"),generate_dialog("yeah")]);
     set_events_in_path(level,[generate_dialog("esto es un momento random"),generate_dialog("rakaka")]);

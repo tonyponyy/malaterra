@@ -10,7 +10,6 @@
             this.current_room = 0;
             this.ambient = ambient;
             this.intentos = 1;
-            this.add_especial_rooms()
             this.initiate();
             this.title = "";
         }
@@ -68,8 +67,8 @@
                 if(room.door_down2){
                     let id_dd2 = room.door_down2.id
                     let pos = this.get_room_pos(id_dd2);
-                    if (!this.rooms[pos].door_up){
-                        this.rooms[pos].door_up ={id: id_dd2-1 }
+                    if (pos !== -1 && !this.rooms[pos].door_up){
+                        this.rooms[pos].door_up ={id: room.id }
                         paint_room(this.rooms[pos].context,this.rooms[pos]);
                         this.rooms[pos].enemys = []
                         this.rooms[pos].objects = []
@@ -82,8 +81,8 @@
                 if(room.door_up2){
                     let id_du2 = room.door_up2.id
                     let pos = this.get_room_pos(id_du2);
-                    if (!this.rooms[pos].door_down){
-                        this.rooms[pos].door_down ={id:id_du2+1 }
+                    if (pos !== -1 && !this.rooms[pos].door_down){
+                        this.rooms[pos].door_down ={id:room.id }
                         paint_room(this.rooms[pos].context,this.rooms[pos]);
                         this.rooms[pos].enemys = []
                         this.rooms[pos].objects = []
@@ -100,8 +99,8 @@
                 if(room.door_right2){
                     let id_dr2 = room.door_right2.id
                     let pos = this.get_room_pos(id_dr2);
-                    if (!this.rooms[pos].door_left){
-                        this.rooms[pos].door_left ={id: id_dr2 - this.size }
+                    if (pos !== -1 && !this.rooms[pos].door_left){
+                        this.rooms[pos].door_left ={id: room.id }
                         paint_room(this.rooms[pos].context,this.rooms[pos]);
                         this.rooms[pos].enemys = []
                         this.rooms[pos].objects = []
@@ -114,8 +113,8 @@
                 if(room.door_left2){
                     let id_dl2 = room.door_left2.id
                     let pos = this.get_room_pos(id_dl2);
-                    if (!this.rooms[pos].door_right){
-                        this.rooms[pos].door_right ={id: id_dl2 + this.size }
+                    if (pos !== -1 && !this.rooms[pos].door_right){
+                        this.rooms[pos].door_right ={id: room.id }
                         paint_room(this.rooms[pos].context,this.rooms[pos]);
                         this.rooms[pos].enemys = []
                         this.rooms[pos].objects = []
@@ -132,42 +131,8 @@
 
     }
 
-    add_especial_rooms() {
-        let room_type = 5;
-        let room_number = 13; // Número de habitaciones especiales a agregar
-    
-        let candidates = [];
-        for (let i = 0; i < this.map.length; i++) {
-            for (let e = 0; e < this.map[i].length; e++) {
-                if (this.map[i][e] == 0) {
-                    if (
-                        (i + 1 < this.map.length && this.map[i+1][e] != 0) ||
-                        (i - 1 >= 0 && this.map[i-1][e] != 0) ||
-                        (e + 1 < this.map[i].length && this.map[i][e+1] != 0) ||
-                        (e - 1 >= 0 && this.map[i][e-1] != 0)
-                    ) {
-                        candidates.push({x: i, y: e});
-                    }
-                }
-            }
-        } // <-- Cierra el bucle aquí
-    
-        let candidates_to_push = candidates.slice().sort(() => Math.random() - 0.5);
-    
-        room_number = Math.min(room_number, candidates_to_push.length);
-        console.log("Número de habitaciones especiales a agregar:", room_number);
-    
-        for (let j = 0; j < room_number; j++) {
-            let x = candidates_to_push[j].x;
-            let y = candidates_to_push[j].y;
-            this.map[x][y] = room_type;
-        }
-    }
-    
-    
-
     get_room(id){
-        for (let i = 0; i < this.rooms.length+1; i++) {
+        for (let i = 0; i < this.rooms.length; i++) {
             if (this.rooms[i].id == id){
                 return this.rooms[i]
             }
@@ -180,7 +145,7 @@
        return room;
     }
     get_room_pos(id){
-        for (let i = 0; i < this.rooms.length+1; i++) {
+        for (let i = 0; i < this.rooms.length; i++) {
             if (this.rooms[i].id == id){
                 return i
             }

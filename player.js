@@ -320,12 +320,7 @@ function paint_auras(){
 }
 
 function this_room_exists(id){
-    try{
-        x = level.get_room_pos(id)
-        return true;
-    }catch{
-        return false;
-    }
+    return level.get_room_pos(id) !== -1;
 }
 
 function check_doors(room_test){
@@ -482,7 +477,14 @@ function check_doors(room_test){
             if (door.direction == "izquierda2" && room_test.door_left2 && room_test.clear){
 
                 previous_room = room_actual
-                update_current_room(room_test.door_left2.id)
+                id_to_test = room_test.door_left2.id
+                if(this_room_exists(id_to_test)){
+                    update_current_room(id_to_test)
+                }else{
+                    // celda tragada por una room doble horizontal decidida en una fila
+                    // todavia no procesada cuando se calculo esta puerta
+                    update_current_room(id_to_test-level.size)
+                }
                 handleDoorEntry('right')
                let rect=0
                if (level.rooms[room_actual].double){
@@ -493,7 +495,12 @@ function check_doors(room_test){
             }
             if (door.direction == "derecha2"  && room_test.door_right2 && room_test.clear){
                 previous_room = room_actual
-                update_current_room(room_test.door_right2.id)
+                id_to_test = room_test.door_right2.id
+                if(this_room_exists(id_to_test)){
+                    update_current_room(id_to_test)
+                }else{
+                    update_current_room(id_to_test-level.size)
+                }
                 handleDoorEntry('left')
 
                 player.x = 35;
