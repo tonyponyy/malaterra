@@ -18,7 +18,7 @@ class Billboard {
             ctx.drawImage(
                 this.img,
                 this.x - camera.x,
-                this.y
+                this.y - camera.y
             );
         }
         this.framecounter++;

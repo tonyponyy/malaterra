@@ -1,5 +1,5 @@
 debug = false;
-camera = {x:0};
+camera = {x:0, y:0};
 SOMBRA = "rgba(34, 32, 52)"
 genex(6);
 pool_disparo = [];
@@ -104,13 +104,16 @@ function update_title(){
 function update_camera() {
     let room = level.rooms[room_actual];
     let room_width = room.canvas.width;
+    let room_height = room.canvas.height;
     // Centrar la cámara en el jugador
     if (!transition_m.isTransitioning){
         camera.x = Math.max(0, Math.min(player.x - 533 / 2, room_width - 533));
+        camera.y = Math.max(0, Math.min(player.y - 300 / 2, room_height - 300));
     }else{
         camera.x = 0
+        camera.y = 0
     }
-   
+
 }
 
 // Función para manejar la entrada en la puerta
@@ -345,7 +348,7 @@ function render_without_player(){
 function render(){
     //dibujamos el fondo
     room = level.rooms[room_actual]
-    ctx.drawImage(room.canvas, -camera.x, 0);
+    ctx.drawImage(room.canvas, -camera.x, -camera.y);
     if(gates.draw_gates){
         set_gates(room)
     }
@@ -418,7 +421,7 @@ function paint_shadows(array_to_draw) {
         let width_object = element.size_w;
         let height_object = element.size_h;
         let shadowX = x_object + width_object / 2 - camera.x;
-        let shadowY = y_object + height_object;
+        let shadowY = y_object + height_object - camera.y;
 
         
         ctx.beginPath();

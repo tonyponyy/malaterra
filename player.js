@@ -119,7 +119,7 @@ const player = {
                     player.width,    // Ancho del frame
                     player.height,   // Alto del frame
                     parseInt(player.x-camera.x) * (scaleX) +rect+rect_x*scaleX,        // Posición X en el canvas
-                    parseInt(player.y)+rect_y,        // Posición Y en el canvas
+                    parseInt(player.y)+rect_y-camera.y,        // Posición Y en el canvas
                     player.width,    // Ancho del jugador en el canvas
                     player.height    // Alto del jugador en el canvas
                 );
@@ -133,7 +133,7 @@ const player = {
                 player.width,    // Ancho del frame
                 player.height,   // Alto del frame
                 parseInt(player.x-camera.x) * (scaleX) +rect+rect_x*scaleX,        // Posición X en el canvas
-                parseInt(player.y)+rect_y,        // Posición Y en el canvas
+                parseInt(player.y)+rect_y-camera.y,        // Posición Y en el canvas
                 player.width,    // Ancho del jugador en el canvas
                 player.height    // Alto del jugador en el canvas
             );
@@ -146,7 +146,7 @@ const player = {
                     player.width,    // Ancho del frame
                     player.height,   // Alto del frame
                     parseInt(player.x-camera.x) * (scaleX) +rect+rect_x*scaleX,        // Posición X en el canvas
-                    parseInt(player.y)+rect_y,        // Posición Y en el canvas
+                    parseInt(player.y)+rect_y-camera.y,        // Posición Y en el canvas
                     player.width,    // Ancho del jugador en el canvas
                     player.height    // Alto del jugador en el canvas
                 );
@@ -160,7 +160,7 @@ const player = {
                     player.width,    // Ancho del frame
                     player.height,   // Alto del frame
                     parseInt(player.x-camera.x) * (scaleX) +rect+rect_x*scaleX,        // Posición X en el canvas
-                    parseInt(player.y)+rect_y,        // Posición Y en el canvas
+                    parseInt(player.y)+rect_y-camera.y,        // Posición Y en el canvas
                     player.width,    // Ancho del jugador en el canvas
                     player.height    // Alto del jugador en el canvas
                 );
@@ -175,7 +175,7 @@ const player = {
                     player.width,    // Ancho del frame
                     player.height,   // Alto del frame
                     parseInt(player.x-camera.x) * (scaleX) +rect+rect_x*scaleX,        // Posición X en el canvas
-                    parseInt(player.y)+rect_y,        // Posición Y en el canvas
+                    parseInt(player.y)+rect_y-camera.y,        // Posición Y en el canvas
                     player.width,    // Ancho del jugador en el canvas
                     player.height    // Alto del jugador en el canvas
                 );
@@ -192,7 +192,7 @@ const player = {
                 player.width,    // Ancho del frame
                 player.height,   // Alto del frame
                 parseInt(player.x-camera.x)+rect_x*scaleX,        // Posición X en el canvas
-                parseInt(player.y)+rect_y,        // Posición Y en el canvas
+                parseInt(player.y)+rect_y-camera.y,        // Posición Y en el canvas
                 player.width,    // Ancho del jugador en el canvas
                 player.height    // Alto del jugador en el canvas
             );
@@ -205,7 +205,7 @@ const player = {
                     player.width,    // Ancho del frame
                     player.height,   // Alto del frame
                     parseInt(player.x-camera.x)+rect_x*scaleX,        // Posición X en el canvas
-                    parseInt(player.y)+rect_y,        // Posición Y en el canvas
+                    parseInt(player.y)+rect_y-camera.y,        // Posición Y en el canvas
                     player.width,    // Ancho del jugador en el canvas
                     player.height    // Alto del jugador en el canvas
                 );
@@ -219,7 +219,7 @@ const player = {
                     player.width,    // Ancho del frame
                     player.height,   // Alto del frame
                     parseInt(player.x-camera.x)+rect_x*scaleX,        // Posición X en el canvas
-                    parseInt(player.y)+rect_y,        // Posición Y en el canvas
+                    parseInt(player.y)+rect_y-camera.y,        // Posición Y en el canvas
                     player.width,    // Ancho del jugador en el canvas
                     player.height    // Alto del jugador en el canvas
                 );
@@ -234,7 +234,7 @@ const player = {
                     player.width,    // Ancho del frame
                     player.height,   // Alto del frame
                     parseInt(player.x-camera.x)+rect_x*scaleX,        // Posición X en el canvas
-                    parseInt(player.y)+rect_y,        // Posición Y en el canvas                    player.width,    // Ancho del jugador en el canvas
+                    parseInt(player.y)+rect_y-camera.y,        // Posición Y en el canvas                    player.width,    // Ancho del jugador en el canvas
                     player.width,    // Ancho del jugador en el canvas
                     player.height    // Alto del jugador en el canvas
                 );
@@ -260,7 +260,7 @@ function drawSpikes() {
     for (let i = 0; i < numSpikes; i++) {
         const angle = player.angleOffset + (i * (2 * Math.PI / numSpikes));
         const spikeX = player.x + Math.cos(angle) * radius - camera.x;
-        const spikeY = player.y + Math.sin(angle) * radius;
+        const spikeY = player.y + Math.sin(angle) * radius - camera.y;
 
         // --- Sombra ---
         ctx.beginPath();
@@ -303,7 +303,7 @@ function paint_auras(){
     
         // Calcular la posición del centro de la imagen
         const centerX = -camera.x+player.x+6;
-        const centerY = player.y+16;
+        const centerY = -camera.y+player.y+16;
     
         // Trasladar el contexto al centro del aura
         ctx.translate(centerX, centerY);
@@ -332,14 +332,17 @@ function check_doors(room_test){
     if (dialog_active){
         return;
     }
-    rect_door = level.rooms[room_actual].double ? 533:0;    
+    rect_door = level.rooms[room_actual].double ? 533:0;
+    rect_door_v = level.rooms[room_actual].double_v ? 300:0;
     const doors = [
         { x: 250, y: 20, width: 50, height: 10, direction: "arriba" },
-        { x: 250, y: 270, width: 50, height: 5, direction: "abajo" },
+        { x: 250, y: 270+rect_door_v, width: 50, height: 5, direction: "abajo" },
         { x: (250)+533, y: 20, width: 50, height: 10, direction: "arriba2" },
-        { x: (250)+533, y: 270, width: 50, height: 5, direction: "abajo2" },
+        { x: (250)+533, y: 270+rect_door_v, width: 50, height: 5, direction: "abajo2" },
         { x: 20, y: 307/2, width: 10, height: 50, direction: "izquierda" },
         { x: 505+rect_door, y: 307/2, width: 10, height: 50, direction: "derecha" },
+        { x: 20, y: 307/2+300, width: 10, height: 50, direction: "izquierda2" },
+        { x: 505+rect_door, y: 307/2+300, width: 10, height: 50, direction: "derecha2" },
     ];
     for (const door of doors) {
         if (
@@ -359,16 +362,16 @@ function check_doors(room_test){
                     update_current_room(id_to_test)
                     handleDoorEntry('down')
                     player.x = 268;
-                    player.y = 235;
+                    player.y = level.rooms[room_actual].canvas.height - 65;
                 }else{
                     //down2
                     update_current_room(id_to_test-level.size)
                     handleDoorEntry('down2')
                     player.x = 533+268;
-                    player.y = 235;
+                    player.y = level.rooms[room_actual].canvas.height - 65;
                 }
 
-               
+
             }
             if (door.direction == "arriba2" && room_test.door_up2 && room_test.clear ){
                 previous_room = room_actual
@@ -379,13 +382,13 @@ function check_doors(room_test){
                     update_current_room(id_to_test)
                     handleDoorEntry('down2')
                     player.x = 268;
-                    player.y = 235;
+                    player.y = level.rooms[room_actual].canvas.height - 65;
                 }else{
                     //down2
                     update_current_room(id_to_test-level.size)
                     handleDoorEntry('down2')
                     player.x = 533+268;
-                    player.y = 235;
+                    player.y = level.rooms[room_actual].canvas.height - 65;
                 }
 
                
@@ -433,12 +436,54 @@ function check_doors(room_test){
                
             }
             if (door.direction == "izquierda" && room_test.door_left && room_test.clear){
-                
+
                 previous_room = room_actual
                 //render_without_player()
-                update_current_room(room_test.door_left.id)
+                console.warn("vamos a la izquierda")
+                id_to_test = room_test.door_left.id
+                if(this_room_exists(id_to_test)){
+                    update_current_room(id_to_test)
+                    handleDoorEntry('right')
+                    let rect=0
+                    if (level.rooms[room_actual].double){
+                        rect = 533;
+                    }
+                    player.x = 460+rect;
+                    player.y = 154;
+                }else{
+                    // el id apuntaba a la celda "tragada" por una room doble vertical:
+                    // la room real está justo encima (fila 1), y entramos por su fila 2
+                    update_current_room(id_to_test-1)
+                    handleDoorEntry('right')
+                    let rect=0
+                    if (level.rooms[room_actual].double){
+                        rect = 533;
+                    }
+                    player.x = 460+rect;
+                    player.y = 154+300;
+                }
+            }
+            if (door.direction == "derecha"  && room_test.door_right && room_test.clear){
+                previous_room = room_actual
+                //render_without_player()
+                id_to_test = room_test.door_right.id
+                if(this_room_exists(id_to_test)){
+                    update_current_room(id_to_test)
+                    handleDoorEntry('left')
+                    player.x = 35;
+                    player.y = 154;
+                }else{
+                    update_current_room(id_to_test-1)
+                    handleDoorEntry('left')
+                    player.x = 35;
+                    player.y = 154+300;
+                }
+            }
+            if (door.direction == "izquierda2" && room_test.door_left2 && room_test.clear){
+
+                previous_room = room_actual
+                update_current_room(room_test.door_left2.id)
                 handleDoorEntry('right')
-               console.warn("vamos a la izquierda")
                let rect=0
                if (level.rooms[room_actual].double){
                 rect = 533;
@@ -446,18 +491,15 @@ function check_doors(room_test){
                 player.x = 460+rect;
                 player.y = 154;
             }
-            if (door.direction == "derecha"  && room_test.door_right && room_test.clear){
+            if (door.direction == "derecha2"  && room_test.door_right2 && room_test.clear){
                 previous_room = room_actual
-                //render_without_player()
-                update_current_room(room_test.door_right.id)
+                update_current_room(room_test.door_right2.id)
                 handleDoorEntry('left')
-               
-                //fadeOut();
-               
+
                 player.x = 35;
                 player.y = 154;
             }
-            
+
             // Opcional: regresar al punto previo si deseas bloquear al jugador en caso de colisión
            
         }

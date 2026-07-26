@@ -75,7 +75,7 @@ class Enemy{
                 0,                               // Skew vertical
                 1,                               // Escala Y
                 parseInt(this.x) - camera.x + (scaleX === -1 ? this.width : 0), // Posición X
-                parseInt(this.y)                 // Posición Y
+                parseInt(this.y) - camera.y      // Posición Y
             );
             }
             if (!transition_m.isTransitioning) {
@@ -114,12 +114,12 @@ class Enemy{
                 this.width,
                 this.height,
                 -camera.x + parseInt(this.x),
-                parseInt(this.y),
+                parseInt(this.y) - camera.y,
                 this.width,
                 this.height
             );
         }
-    
+
         // Dibujo de la barra de vida (sin cambios)
         if (this.show_hp) {
             let life_perc = (this.hp/this.hp_initial)*100;
@@ -200,7 +200,7 @@ class Enemy{
             this.width,
             this.height,
             -camera.x+ parseInt(this.x)+x,
-            parseInt(this.y)+y,
+            parseInt(this.y)+y-camera.y,
             this.width,
             this.height
         );

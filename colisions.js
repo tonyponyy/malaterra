@@ -15,7 +15,7 @@ function colision_detect(element1, element2) {
         ctx.lineWidth = 2;
         ctx.strokeRect(
             element1.x - camera.x,  // Ajustamos por la posición de la cámara
-            element1.y,
+            element1.y - camera.y,
             element1.size_w,
             element1.size_h
         );
@@ -24,7 +24,7 @@ function colision_detect(element1, element2) {
         ctx.strokeStyle = col ? 'red' : 'blue';   // Rojo si hay colisión, azul si no
         ctx.strokeRect(
             element2.x - camera.x,  // Ajustamos por la posición de la cámara
-            element2.y,
+            element2.y - camera.y,
             element2.size_w,
             element2.size_h
         );

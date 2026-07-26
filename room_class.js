@@ -16,25 +16,28 @@ class Room{
     // hay habitación ---> {id,type} -->{3,}
 
 
-    constructor(type, id, door_up,door_down,door_left,door_right,door_up2,door_down2,clear,array_x,array_y,ambient,double,array_pos) {
-        this.type = type; 
-        this.id = id;  
+    constructor(type, id, door_up,door_down,door_left,door_right,door_up2,door_down2,clear,array_x,array_y,ambient,double,array_pos,door_left2,door_right2,double_v) {
+        this.type = type;
+        this.id = id;
         this.door_up = door_up;
         this.door_down = door_down;
         this.door_left = door_left;
         this.door_right = door_right;
         this.door_up2 = door_up2;
         this.door_down2 = door_down2
+        this.door_left2 = door_left2 || false;
+        this.door_right2 = door_right2 || false;
         this.clear = false;
         this.array_pos = array_pos;
         this.array_x = array_x;
         this.array_y = array_y;
         this.ambient = ambient;
         this.double = double;
+        this.double_v = double_v || false;
         // creación canvas
         this.canvas = document.createElement("canvas");
-        this.canvas.width = double ? 1066:533; 
-        this.canvas.height = 300; 
+        this.canvas.width = double ? 1066:533;
+        this.canvas.height = this.double_v ? 600:300;
         this.context = this.canvas.getContext("2d");
         // pools
         this.events = [];
@@ -108,7 +111,7 @@ class Room{
     }
 
     poblate_normal(){
-        if (!this.double){
+        if (!this.double && !this.double_v){
           let exterior = MAPA_VACIO;
           let interior = MAPA_VACIO;
   

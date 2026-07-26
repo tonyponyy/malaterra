@@ -27,7 +27,7 @@ class AnimationScene {
             this.width,
             this.height,
             this.x - camera.x,
-            this.y,
+            this.y - camera.y,
             this.width,
             this.height
         );

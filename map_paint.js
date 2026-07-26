@@ -12,6 +12,7 @@ function drawMap(context, blockSize, mapWidth, mapHeight, startX, startY) {
     const currentRoomX = level.rooms[room_actual].array_y;
     const currentRoomY = level.rooms[room_actual].array_x;
     const current_double = level.rooms[room_actual].double;
+    const current_double_v = level.rooms[room_actual].double_v;
    
     // Calculate the number of visible tiles that fit in the viewport
     const visibleTilesX = Math.floor(mapWidth / blockSize);
@@ -44,6 +45,8 @@ function drawMap(context, blockSize, mapWidth, mapHeight, startX, startY) {
            
             const tileValue = level.map[y][x];
             const multiplier = tileValue === 10 ? 2 : 1;
+            // room doble vertical (marcador 11): ocupa 2 casillas de alto en vez de ancho
+            const heightMultiplier = tileValue === 11 ? 2 : 1;
            
             const color = colors[tileValue] || "white";
            
@@ -61,9 +64,12 @@ function drawMap(context, blockSize, mapWidth, mapHeight, startX, startY) {
                 
                 // Choose the appropriate image based on room type and completion status
                 let tile_img;
-                if (tileValue === 10) { // Double room
+                if (tileValue === 10) { // Double room (horizontal)
                     tile_img = isCompleted ? casilla_completada_doble : casilla_no_completada_doble;
                 } else {
+                    // TODO: si se añade una imagen dedicada 10x20 (casilla_*_doble_v) para el
+                    // doble vertical, seleccionarla aquí cuando tileValue === 11. De momento
+                    // se usa la casilla normal, que se estira verticalmente.
                     tile_img = isCompleted ? casilla_completada : casilla_no_completada;
                 }
 
@@ -71,7 +77,7 @@ function drawMap(context, blockSize, mapWidth, mapHeight, startX, startY) {
                 let drawX = screenX;
                 let drawY = screenY;
                 let drawWidth = blockSize * multiplier;
-                let drawHeight = blockSize;
+                let drawHeight = blockSize * heightMultiplier;
                 
                 // Calculate source rectangle (portion of the image to draw)
                 let sourceX = 0;
@@ -130,9 +136,10 @@ function drawMap(context, blockSize, mapWidth, mapHeight, startX, startY) {
                     // Draw current room indicator if this is the current room
                     if (x === currentRoomX && y === currentRoomY) {
                         const rect_x = current_double ? 5 : 0;
+                        const rect_y = current_double_v ? 5 : 0;
                         // Adjust marker position based on visible portion
                         if (drawX + rect_x >= startX && drawX + rect_x < startX + mapWidth) {
-                            context.drawImage(marca_player, drawX + rect_x, drawY);
+                            context.drawImage(marca_player, drawX + rect_x, drawY + rect_y);
                         }
                     }
                 }

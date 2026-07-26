@@ -83,7 +83,7 @@ class Particle{
             
             // Dibujamos la sombra
             ctx.save();
-            ctx.translate(parseInt(-camera.x + this.x) + 8, parseInt(this.y) + 10);
+            ctx.translate(parseInt(-camera.x + this.x) + 8, parseInt(-camera.y + this.y) + 10);
             
             // Configuramos la sombra (más pequeña cuanto más elevado esté)
             const shadowScale = 1 - (elevation / (maxElevation * 2));
@@ -95,7 +95,7 @@ class Particle{
             
             // Dibujamos el objeto elevado
             ctx.save();
-            ctx.translate(parseInt(-camera.x + this.x) + 8, parseInt(this.y) + 10 - elevation);
+            ctx.translate(parseInt(-camera.x + this.x) + 8, parseInt(-camera.y + this.y) + 10 - elevation);
             ctx.rotate(this.rotation);
             
             ctx.drawImage(

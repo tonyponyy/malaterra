@@ -83,7 +83,7 @@
                     let id_du2 = room.door_up2.id
                     let pos = this.get_room_pos(id_du2);
                     if (!this.rooms[pos].door_down){
-                        this.rooms[pos].door_down ={id:id_du2+1 } 
+                        this.rooms[pos].door_down ={id:id_du2+1 }
                         paint_room(this.rooms[pos].context,this.rooms[pos]);
                         this.rooms[pos].enemys = []
                         this.rooms[pos].objects = []
@@ -96,7 +96,37 @@
 
 
             }
-            
+            if (room.double_v){
+                if(room.door_right2){
+                    let id_dr2 = room.door_right2.id
+                    let pos = this.get_room_pos(id_dr2);
+                    if (!this.rooms[pos].door_left){
+                        this.rooms[pos].door_left ={id: id_dr2 - this.size }
+                        paint_room(this.rooms[pos].context,this.rooms[pos]);
+                        this.rooms[pos].enemys = []
+                        this.rooms[pos].objects = []
+                        this.rooms[pos].wall_objects = []
+                        this.rooms[pos].poblate_enemys();
+                        this.rooms[pos].poblate_objects();
+                        this.rooms[pos].poblate_wall_objects();
+                    }
+                }
+                if(room.door_left2){
+                    let id_dl2 = room.door_left2.id
+                    let pos = this.get_room_pos(id_dl2);
+                    if (!this.rooms[pos].door_right){
+                        this.rooms[pos].door_right ={id: id_dl2 + this.size }
+                        paint_room(this.rooms[pos].context,this.rooms[pos]);
+                        this.rooms[pos].enemys = []
+                        this.rooms[pos].objects = []
+                        this.rooms[pos].wall_objects = []
+                        this.rooms[pos].poblate_enemys();
+                        this.rooms[pos].poblate_objects();
+                        this.rooms[pos].poblate_wall_objects();
+                    }
+                }
+            }
+
         }
 
 

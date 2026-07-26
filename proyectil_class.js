@@ -77,7 +77,7 @@ class Proyectil {
     draw() {
         ctx.save(); // Guardar el estado actual del ctxo
         
-        ctx.translate(parseInt(-camera.x+this.x) + 8, parseInt(this.y) + 10); // Mover el ctxo al centro del proyectil
+        ctx.translate(parseInt(-camera.x+this.x) + 8, parseInt(-camera.y+this.y) + 10); // Mover el ctxo al centro del proyectil
         ctx.rotate((Math.PI / 180) * (this.angle +90)); // Rotar el ctxo según el ángulo
         
         ctx.drawImage(this.image, -8, -10, 16, 20); // Dibujar la imagen centrada

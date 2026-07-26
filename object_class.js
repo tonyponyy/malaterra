@@ -85,8 +85,8 @@ class ObjectRoom{
         if (this.light){
             console.warn(this.img.src)
              ctx.globalCompositeOperation = "color-dodge"; 
-             ctx.drawImage(this.img,-camera.x+this.x+correction_x,this.y+correction_y)
-             ctx.restore();   
+             ctx.drawImage(this.img,-camera.x+this.x+correction_x,-camera.y+this.y+correction_y)
+             ctx.restore();
             return
         }
 
@@ -95,7 +95,7 @@ class ObjectRoom{
              ctx.filter= "brightness(100)"
             }
             let size_correction = this.height > 32 ? this.height-32:0
-            ctx.drawImage(this.img,-camera.x+this.x+correction_x,this.y+correction_y-size_correction)
+            ctx.drawImage(this.img,-camera.x+this.x+correction_x,-camera.y+this.y+correction_y-size_correction)
             ctx.restore();
 
 
