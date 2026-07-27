@@ -130,6 +130,14 @@ const poncho = crearImagen('img/jugador/poncho.png');
 const traje_exterminador = crearImagen('img/jugador/traje_exterminador.png');
 const traje_ninja = crearImagen('img/jugador/traje_ninja.png');
 
+// corazones (vida del jugador)
+const corazon_img = crearImagen('img/jugador/corazon.png');
+const corazon_medio_img = crearImagen('img/jugador/corazon_medio.png');
+const corazon_vacio_img = crearImagen('img/jugador/corazon_vacio.png');
+
+// moneda (dinero del jugador)
+const moneda_img = crearImagen('img/gui/moneda.png');
+
 // cascos
 const casco1 = crearImagen('img/jugador/casco1.png');
 const cascohueso = crearImagen('img/jugador/cascohueso.png');

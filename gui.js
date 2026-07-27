@@ -2,6 +2,42 @@ let transtion_settings = {
     frame_end: 0,
     fade_in: true
 };
+
+// vida del jugador en corazones, arriba a la izquierda. cada corazon son
+// 20 puntos de vida: hp_base marca cuantos corazones se dibujan (llenos
+// del todo cuando hp esta a tope) y hp cuantos estan llenos/medios/vacios.
+function draw_player_hp(context = ctx_screen){
+    const vida_por_corazon = 20;
+    const heart_size = 16;
+    const spacing = 2;
+    const start_x = 8;
+    const start_y = 4;
+
+    const total_hearts = Math.ceil(player.hp_base / vida_por_corazon);
+
+    for (let i = 0; i < total_hearts; i++){
+        const heart_hp = player.hp - i * vida_por_corazon;
+        let image;
+        if (heart_hp >= vida_por_corazon){
+            image = corazon_img;
+        } else if (heart_hp > 0){
+            image = corazon_medio_img;
+        } else {
+            image = corazon_vacio_img;
+        }
+        context.drawImage(image, start_x + i * (heart_size + spacing), start_y);
+    }
+}
+
+// dinero del jugador, debajo de los corazones: icono de moneda + "x" cantidad.
+function draw_player_money(context = ctx_screen){
+    const coin_size = 16;
+    const start_x = 8;
+    const start_y = 24;
+
+    context.drawImage(moneda_img, start_x, start_y);
+    print_text("x" + player.money, start_x + coin_size + 4, start_y + 3, context);
+}
 // Para hacer aparecer la pantalla gradualmente
 function fadeIn() {
     transtion_settings.fade_in = true;

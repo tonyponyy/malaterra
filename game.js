@@ -72,6 +72,8 @@ function animationLoop() {
     }
     //ctx_screen.drawImage(panel_iz,400,0)
     ctx_screen.drawImage(canvas,0,0)
+    draw_player_hp(ctx_screen)
+    draw_player_money(ctx_screen)
     //drawMinimap(ctx_screen,50,20)
     if(level.rooms[room_actual].clear){
         drawMap(ctx_screen, 10,50,50,461,241);
