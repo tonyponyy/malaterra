@@ -58,7 +58,7 @@ const player = {
     critical_explosion:false,
     // atributos del usuario:
     can_move:true,
-    money:Infinity,
+    money:100,
     items:[],
     //direcciones
     left:false,
