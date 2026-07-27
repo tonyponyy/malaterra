@@ -306,6 +306,10 @@ class Enemy{
             let particle = new Particle(image,splat_img,this.x+this.size_h/2,this.y+this.size_h/2,vx*3,vy*3)
             level.rooms[room_actual].particles.push(particle)
         }
+        if (Math.random() < BOLSA_DINERO_DROP_CHANCE){
+            let bolsa = new ObjectRoom(BOLSA_DINERO_TYPE, this.x+this.size_w/2-16, this.y+this.size_h/2-16, false, false, 10, 32);
+            level.rooms[room_actual].objects.push(bolsa);
+        }
     }
 
 

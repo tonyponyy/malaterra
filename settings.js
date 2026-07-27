@@ -18,9 +18,16 @@ PART_IMG =[slime_part,octo_part,esqueleto_part,octo_part]
 SPEED_ENEMY =[2,1,2,1]
 
 //objetos
-IMAGE_OBJECT = [null,jarron,ventanal1,ventanal_luz,ventanal2,ventana_mazmorra,luz_mazmorra_img,pinchos,piedra,piedra2,piedra3,palmera1,palmera2,palmera3,tienda,palmerita,tocon,piedra4,piedra5,piedra6,vending,bidon]
+IMAGE_OBJECT = [null,jarron,ventanal1,ventanal_luz,ventanal2,ventana_mazmorra,luz_mazmorra_img,pinchos,piedra,piedra2,piedra3,palmera1,palmera2,palmera3,tienda,palmerita,tocon,piedra4,piedra5,piedra6,vending,bidon,bolsa_dinero_img]
 DESTRUCTIBLE_OBJECT =[1,21]
-TRABESABLE_OBJECT =[]
+BOLSA_DINERO_TYPE = IMAGE_OBJECT.indexOf(bolsa_dinero_img)
+//probabilidad de que un enemigo suelte una bolsa de dinero al morir,
+//y cuanto dinero da al recogerla
+BOLSA_DINERO_DROP_CHANCE = 0.3
+BOLSA_DINERO_MIN = 5
+BOLSA_DINERO_MAX = 20
+//la bolsa de dinero no bloquea el paso, se camina por encima
+TRABESABLE_OBJECT =[BOLSA_DINERO_TYPE]
 //imagenes de sala
 
 //1 mazmorra

@@ -173,6 +173,7 @@ const sold_img = crearImagen('img/ambientes/tienda/sold.png');
 const bidon = crearImagen('img/objetos/bidon.png');
 const jarron = crearImagen('img/objetos/jarron.png');
 const pinchos = crearImagen('img/objetos/pinchos.png');
+const bolsa_dinero_img = crearImagen('img/objetos/bolsa_dinero.png');
 const piedra = crearImagen('img/objetos/piedra.png');
 const piedra2 = crearImagen('img/objetos/piedra2.png');
 const piedra3 = crearImagen('img/objetos/piedra3.png');

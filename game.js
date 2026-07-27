@@ -192,6 +192,10 @@ function objects_update(){
             }
 
         }
+        if (object.type === BOLSA_DINERO_TYPE && colision_detect(object,player)){
+            player.money += parseInt(Math.random()*(BOLSA_DINERO_MAX - BOLSA_DINERO_MIN + 1)) + BOLSA_DINERO_MIN;
+            object.delete = true;
+        }
         if (object.delete){
             level.rooms[room_actual].objects.splice(i,1)
         }
